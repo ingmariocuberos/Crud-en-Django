@@ -1,0 +1,1 @@
+web: gunicorn Pruebatecnica.wsgi --log-file -
