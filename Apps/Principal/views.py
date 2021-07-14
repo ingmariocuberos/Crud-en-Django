@@ -20,6 +20,16 @@ def eliminar_clase(request, id):
     clase.delete()
     return redirect('/')
 
+def eliminar_curso(request, id):
+    curso = Curso.objects.get(id=id)
+    curso.delete()
+    return redirect('/')
+
+def eliminar_alumno(request, id):
+    alumno = Alumnos.objects.get(id=id)
+    alumno.delete()
+    return redirect('/')
+
 def registrar_clase(request):
     ide = request.POST['numId']
     nombre = request.POST['txtNombre']
@@ -46,10 +56,10 @@ def registrar_curso(request):
 def registrar_alumno(request):
     ide = request.POST['numId']
     nombre = request.POST['txtNombre']
-    creditos = request.POST['numCreditos']
-    email = request.POST['mailemail']
-    tipo = request.POST['tipoclase']
-    modalidad = request.POST['tipomodalidad']
+    apellido = request.POST['txtApellido']
+    email = request.POST['email']
+    cursoMatriculado = int(request.POST['cursoMatriculado'])
+    clasesVistas = request.POST['clasesVistas']
 
-    clase=Clase.objects.create(id=ide, nombre=nombre, creditos=creditos, descripcion=email, tipo=tipo, modalidad=modalidad)
+    clase=Alumnos.objects.create(id=ide, nombre=nombre, apellido=apellido, correo=email, cursoMatriculado_id=cursoMatriculado, clasesVistas=clasesVistas)
     return redirect('/')
