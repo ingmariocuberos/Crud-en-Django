@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Clase, Curso
+from .models import Clase, Curso, Alumnos
 
 @admin.register(Clase)
 class CursoAdmin(admin.ModelAdmin):
@@ -7,4 +7,6 @@ class CursoAdmin(admin.ModelAdmin):
     list_editable = ('nombre', 'creditos', 'descripcion', 'tipo', 'modalidad')
 
 admin.site.register(Curso)
+
+admin.site.register(Alumnos)
 

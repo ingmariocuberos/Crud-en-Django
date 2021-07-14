@@ -11,13 +11,14 @@
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="{% static 'css/gestionClases.css %'}"
+    <link rel="stylesheet" href="{% static 'css/gestionClases.css' %}" />
+
     <title>{{titulo}}</title>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-success bg-light">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
+        <a class="navbar-brand" href="#">Gestión</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -32,35 +33,285 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Features</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Pricing</a>
-            </li>
-            <li class="nav-item">
               <a
-                class="nav-link disabled"
-                href="#"
-                tabindex="-1"
-                aria-disabled="true"
-                >Disabled</a
+                class="nav-link active"
+                aria-current="page"
+                href="#gestioncursos"
+                >Cursos</a
               >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#gestionalumnos">Alumnos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#gestionclases">Clases</a>
             </li>
           </ul>
         </div>
       </div>
     </nav>
 
-    <div class="container py-3">
-      <h2>Lista de las Clases</h2>
+    <div id="gestioncursos" class="container py-3">
+      <h2>Lista de los Cursos</h2>
+      <br />
       <div class="row">
-        <div class="col-md-4"></div>
+        <div class="col-md-4">
+          <div class="card">
+            <h4 class="ms-3 mt-3">Adición de Cursos</h4>
+            <div class="card-body">
+              <form action="/registrarCurso/" method="POST">
+                <div class="form-group">
+                  {% csrf_token %}
+                  <input
+                    type="number"
+                    name="numId"
+                    minlength="2"
+                    maxlength="4"
+                    class="form-control"
+                    placeholder="Código de Curso"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <input
+                    type="text"
+                    name="txtNombre"
+                    minlength="3"
+                    maxlength="99"
+                    class="form-control"
+                    placeholder="Nombre"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <input
+                    type="text"
+                    name="txtPerfil"
+                    minlength="3"
+                    maxlength="500"
+                    class="form-control"
+                    placeholder="Perfil"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <input
+                    type="text"
+                    name="txtDescripcion"
+                    minlength="3"
+                    maxlength="500"
+                    class="form-control"
+                    placeholder="Descripcion"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <input
+                    type="number"
+                    name="numDuracion"
+                    class="form-control"
+                    min="2"
+                    max="2000"
+                    placeholder="Duración (horas)"
+                    required
+                  />
+                </div>
+                <div class="form-group flex">
+                  <h5>Clases asignadas al nuevo Curso</h5>
+                  {% for c in clases %}
+                  <label><input type="checkbox" name="{{c.id}}" id="{{c.id}}" value="{{c.id}}"> {{c}}</label><br>
+                  {% endfor %}                  
+                  </ul>
+                </div>
+                <div class="form-group margin-auto">
+                  <input
+                    type="submit"
+                    class="btn btn-success btn-block text-white"
+                    value="Salvar"
+                  />
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
         <div class="col-md-8">
           <div class="table-responsive">
             <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Nombre del Curso</th>
+                  <th>Perfil</th>
+                  <th>Descripción</th>
+                  <th>Duración (horas)</th>
+                  <th>Clases</th>
+                  <th colspan="1">Opciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for c in cursos %}
+                <tr>
+                  <td>{{c.id}}</td>
+                  <td>{{c.nombre}}</td>
+                  <td>{{c.perfil}}</td>
+                  <td>{{c.descripcion}}</td>
+                  <td>{{c.duracion}}</td>
+                  <td>
+                    <ul>
+                      {% for clase in c.clases.all %}
+                      <li>{{clase}}</li>
+                      {% endfor %}
+                    </ul>
+                  </td>
+                  <td>
+                    <a
+                      href="edicionClase/{{c.id}}"
+                      class="btn btn-block btn-sm btn-info"
+                      >Editar</a
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="eliminarClase/{{c.id}}"
+                      class="btn btn-block btn-sm btn-danger"
+                      >Eliminar</a
+                    >
+                  </td>
+                </tr>
+
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="gestionclases" class="container py-3">
+      <h2>Lista de las Clases</h2>
+      <br />
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card">
+            <h4 class="ms-3 mt-3">Adición de Clase</h4>
+            <div class="card-body">
+              <form action="/registrarClase/" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                  <input
+                    type="number"
+                    name="numId"
+                    minlength="3"
+                    maxlength="5"
+                    class="form-control"
+                    placeholder="Código de Clase"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <input
+                    type="text"
+                    name="txtNombre"
+                    minlength="3"
+                    maxlength="99"
+                    class="form-control"
+                    placeholder="Nombre"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <input
+                    type="number"
+                    name="numCreditos"
+                    class="form-control"
+                    min="1"
+                    max="4"
+                    placeholder="Créditos"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <input
+                    type="email"
+                    name="mailemail"
+                    minlength="3"
+                    maxlength="500"
+                    class="form-control"
+                    placeholder="email"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <p>Tipo</p>
+                  <div>
+                    <input
+                      type="radio"
+                      id="tech"
+                      name="tipoclase"
+                      value="Tech"
+                      checked
+                    />
+                    <label for="tipodeclase">Tech</label>
+                  </div>
+
+                  <div>
+                    <input
+                      type="radio"
+                      id="Basica"
+                      name="tipoclase"
+                      value="Básica"
+                    />
+                    <label for="Basica">Básica</label>
+                  </div>
+
+                  <div>
+                    <input
+                      type="radio"
+                      id="Desarrollo"
+                      name="tipoclase"
+                      value="Desarrollo"
+                    />
+                    <label for="Desarrollo">Desarrollo</label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <br />
+                  <p>Modalidad</p>
+                  <div>
+                    <input
+                      type="radio"
+                      id="presencial"
+                      name="tipomodalidad"
+                      value="Presencial"
+                      checked
+                    />
+                    <label for="presencial">Presencial</label>
+                  </div>
+
+                  <div>
+                    <input
+                      type="radio"
+                      id="Virtual"
+                      name="tipomodalidad"
+                      value="Virtual"
+                    />
+                    <label for="Virtual">Virtual</label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="submit"
+                    class="btn btn-success btn-block text-white"
+                    value="Salvar"
+                  />
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="table-responsive">
+            <table class="table table-striped centrado">
               <thead>
                 <tr>
                   <th>Código</th>
@@ -73,7 +324,7 @@
                 </tr>
               </thead>
               <tbody>
-                {% for c in object_list %}
+                {% for c in clases %}
                 <tr>
                   <td>{{c.id}}</td>
                   <td>{{c.nombre}}</td>
@@ -104,15 +355,107 @@
         </div>
       </div>
     </div>
+
+    <div id="gestionalumnos" class="container py-3">
+      <h2>Listado de Alumnos</h2>
+      <div class="row">
+        <div class="col-md-4">
+          <br />
+          <br />
+          <div class="card">
+            <h4 class="ms-3 mt-3">Adición Estudiante</h4>
+            <div class="card-body">
+              <form action="/registrarClase" method="POST">
+                <div class="form-group">
+                  {% csrf_token %}
+                  <input
+                    type="text"
+                    name="txtNombre"
+                    minlength="3"
+                    maxlength="99"
+                    class="form-control"
+                    placeholder="Nombre"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <input
+                    type="number"
+                    name="numCreditos"
+                    class="form-control"
+                    min="1"
+                    max="4"
+                    placeholder="Créditos"
+                  />
+                </div>
+                <div class="form-group">
+                  <input
+                    type="submit"
+                    class="btn btn-success btn-block text-white"
+                    value="Salvar"
+                  />
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="table-responsive">
+            <table class="table table-striped centrado">
+              <thead>
+                <tr>
+                  <th># Documento</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th>Mail</th>
+                  <th>Curso Matriculado</th>
+                  <th>Clases Vistas</th>
+                  <th colspan="1">Opciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for c in alumnos %}
+                <tr>
+                  <td>{{c.id}}</td>
+                  <td>{{c.nombre}}</td>
+                  <td>{{c.apellido}}</td>
+                  <td>{{c.correo}}</td>
+                  <td>{{c.cursoMatriculado}}</td>
+                  <td>{{c.clasesVistas}}</td>
+                  <td>
+                    <a
+                      href="edicionClase/{{c.id}}"
+                      class="btn btn-block btn-sm btn-info"
+                      >Editar</a
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="eliminarClase/{{c.id}}"
+                      class="btn btn-block btn-sm btn-danger"
+                      >Eliminar</a
+                    >
+                  </td>
+                </tr>
+
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+      integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+      integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+      crossorigin="anonymous"
+    ></script>
+    <script src="{% static 'js/gestionClases.js' %}"></script>
   </body>
-  <script
-    src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
-    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
-    crossorigin="anonymous"
-  ></script>
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
-    integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
-    crossorigin="anonymous"
-  ></script>
 </html>

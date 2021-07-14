@@ -1,6 +1,8 @@
 from django.urls import path
-from Apps.Principal.views import ClaseListView, eliminar_clase
+from Apps.Principal.views import home, eliminar_clase, registrar_clase, registrar_curso
 urlpatterns = [
-    path('', ClaseListView.as_view(), name='gestion_clases'),
-    path('eliminarClase/<int:id>', eliminar_clase)
+    path('', home),
+    path('eliminarClase/<int:id>', eliminar_clase),
+    path('registrarClase/', registrar_clase),
+    path('registrarCurso/', registrar_curso)
 ]
