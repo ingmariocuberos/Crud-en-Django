@@ -1,2 +1,2 @@
 
---- Prueba Técnica realizada en Django para la empresa Izeven ---
+Crud realizado en Django para la gestión de Cursos, Materias y estudiantes
